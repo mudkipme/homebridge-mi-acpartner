@@ -93,6 +93,9 @@ XiaoMiAcPartner.prototype = {
                     case "switchRepeat":
                         accessories.push(new fs_Accessory.SwitchRepeatAccessory(element, this));
                         break;
+                    case "switchMulti":
+                        accessories.push(new fs_Accessory.SwitchMultiAccessory(element, this));
+                        break;
                     case "heaterCooler":
                         accessories.push(new fs_Accessory.HeaterCoolerAccessory(element, this));
                         break;
