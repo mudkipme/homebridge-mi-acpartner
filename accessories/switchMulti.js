@@ -34,11 +34,11 @@ class SwitchMultiAccessory extends baseSwitch {
                 continue;
             }
             const switchService = new Service.Switch(switchName, switchName);
-            switchService.getCharacteristic(Characteristic.On)
+            const switchState = switchService.getCharacteristic(Characteristic.On)
                 .on('set', (value, callback) => this.setSwitchState(switchName, value, callback))
                 .updateValue(switchName === this.currentOn ? Characteristic.On.YES : Characteristic.On.NO);
             this.services.push(switchService);
-            this.switches[switchName] = switchService;
+            this.switches[switchName] = switchState;
         }
     }
 
@@ -56,7 +56,7 @@ class SwitchMultiAccessory extends baseSwitch {
         this._sendCode(code, (err) => {
             for (let name of Object.keys(this.switches)) {
                 if (switchName !== name) {
-                    this.switches[name].setValue(Characteristic.On.NO);
+                    this.switches[name].updateValue(Characteristic.On.NO);
                 }
             }
             callback(err);
