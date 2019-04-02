@@ -33,7 +33,7 @@ class LearnIRAccessory extends baseSwitch {
 
         if (value) {
             //Switch on
-            this.platform.devices[this.deviceIndex].call('start_ir_learn', [30])
+            this.platform.devices[this.ip].call('start_ir_learn', [30])
                 .then(() => {
                     this.log("[%s]Start learning", this.name);
                     this.closeTimer = setInterval(() => {
@@ -54,7 +54,7 @@ class LearnIRAccessory extends baseSwitch {
                 });
         } else {
             //Switch off
-            this.platform.devices[this.deviceIndex].call('end_ir_learn', [])
+            this.platform.devices[this.ip].call('end_ir_learn', [])
                 .then(() => {
                     this.log("[%s]End learning", this.name);
                     callback();
@@ -70,7 +70,7 @@ class LearnIRAccessory extends baseSwitch {
         }
     }
     showIRCode() {
-        this.platform.devices[this.deviceIndex].call('get_ir_learn_result', [])
+        this.platform.devices[this.ip].call('get_ir_learn_result', [])
             .then((ret) => {
                 const code = ret[0];
                 if (code !== '(null)' && code !== this.lastIRCode) {

@@ -30,7 +30,7 @@ function XiaoMiAcPartner(log, config, api) {
     this.UUIDGen = UUIDGen;
 
     //Miio devices
-    this.devices = [];
+    this.devices = {};
 
     //Config
     this.refreshInterval = config["refreshInterval"] !== undefined ? config["refreshInterval"] : 10 * 60 * 1000;

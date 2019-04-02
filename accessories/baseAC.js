@@ -49,7 +49,7 @@ class baseAC extends base {
         this.bState = !this.bState;
         let command = this.bState ? "on" : "off";
 
-        const p1 = this.platform.devices[this.deviceIndex].call("toggle_plug", [command])
+        const p1 = this.platform.devices[this.ip].call("toggle_plug", [command])
             .then((data) => {
                 if (data[0] === "ok") {
                     this.log.debug("[DEBUG]Success")
@@ -91,7 +91,7 @@ class baseAC extends base {
             this.log.debug("[DEBUG]Sending AC code: %s", code);
             command = 'send_cmd';
         }
-        const p1 = this.platform.devices[this.deviceIndex].call(command, [code])
+        const p1 = this.platform.devices[this.ip].call(command, [code])
             .then((data) => {
                 if (data[0] === "ok") {
                     this.log.debug("[DEBUG]Success");
@@ -177,7 +177,7 @@ class baseAC extends base {
         }
 
         //Update CurrentTemperature
-        const p1 = this.outerSensor && this.platform.devices[this.deviceIndex].call('get_device_prop_exp', [
+        const p1 = this.outerSensor && this.platform.devices[this.ip].call('get_device_prop_exp', [
             [this.outerSensor, "temperature", "humidity"]
         ])
             .then((senRet) => {
@@ -197,7 +197,7 @@ class baseAC extends base {
 
 
         //Update AC state
-        const p2 = this.platform.devices[this.deviceIndex].call('get_model_and_state', [])
+        const p2 = this.platform.devices[this.ip].call('get_model_and_state', [])
             .then((ret) => {
                 if (this.lastPartnerState !== ret[1]) {
                     this.lastPartnerState = ret[1];
