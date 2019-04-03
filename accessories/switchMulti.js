@@ -35,32 +35,39 @@ class SwitchMultiAccessory extends baseSwitch {
             }
             const switchService = new Service.Switch(switchName, switchName);
             const switchState = switchService.getCharacteristic(Characteristic.On)
-                .on('set', (value, callback) => this.setSwitchState(switchName, value, callback))
-                .updateValue(switchName === this.currentOn ? Characteristic.On.YES : Characteristic.On.NO);
+                .on('set', this.setSwitchMultiState.bind(this, switchName))
+                .updateValue(switchName === this.currentOn);
             this.services.push(switchService);
             this.switches[switchName] = switchState;
         }
     }
 
-    setSwitchState(switchName, value, callback) {
-        if (this.currentOn !== switchName && value === Characteristic.On.NO) {
+    setSwitchMultiState(switchName, value, callback, context) {
+        const funcContext = 'fromSetSwitchMultiState';
+
+        if (context === funcContext) {
             callback(null);
             return;
         }
-        this.currentOn = value === Characteristic.On.YES ? switchName : 'off';
+        this.currentOn = value ? switchName : 'off';
         const code = this.codeMap[this.currentOn];
         if (!code) {
             callback(null);
             return;
         }
+        this.log.debug("[DEBUG] %s %s %s send %s", switchName, value, this.currentOn, code);
         this._sendCode(code, (err) => {
             for (let name of Object.keys(this.switches)) {
                 if (switchName !== name) {
-                    this.switches[name].updateValue(Characteristic.On.NO);
+                    this.switches[name].setValue(false, undefined, funcContext);
                 }
             }
             callback(err);
         });
+    }
+
+    setSwitchState(value, callback) {
+        callback(null);
     }
 }
 
